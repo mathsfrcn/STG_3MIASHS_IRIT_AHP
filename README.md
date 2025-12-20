@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Status](https://img.shields.io/badge/Status-Termin%C3%A9-brightgreen)
-![Version](https://img.shields.io/badge/Version-v12.5-blue)
+![Version](https://img.shields.io/badge/Version-v6.0-blue)
 
 Ce projet implémente une application web interactive dédiée à la prise de décision multicritère en environnement industriel. Il intègre un modèle d'optimisation mathématique en Julia exploitant la méthode AHP (Analytic Hierarchy Process) pour agréger les préférences de plusieurs décideurs. L'objectif est de placer l'humain au cœur du processus de production (Industrie 5.0) en facilitant le consensus via une interface numérique intuitive
 
