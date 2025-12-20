@@ -36,9 +36,9 @@ L'agrégation des préférences suit la logique hiérarchique de Saaty. Le calcu
 ## 🚀 Installation
 
 ### 0. Cloner le dépôt :
-    ```
-    git clone [https://github.com/winston2968/Projet-Simulation-Aleatoire.git](https://github.com/winston2968/Projet-Simulation-Aleatoire.git)
-    ```
+```Bash
+    git clone [https://github.com/mathsfrcn/IRIT_application_optimisation.git](https://github.com/mathsfrcn/IRIT_application_optimisation.git)
+```
 
 ### 1. Prérequis Python
 Installez les dépendances via pip :
