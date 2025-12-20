@@ -1,8 +1,8 @@
 Applications :
-	-run.py : instance du serveur local					//Manipulation requise
-	-configurationApp.xlsm : paramétrage du serveur				//Manipulation requise
+	-run.py : instance du serveur local									//Manipulation requise
+	-configurationApp.xlsm : paramétrage du serveur						//Manipulation requise
 	-gAHPInterface.py : Interface pour échanger avec le modèle Julia	//Aucune manipulation requise
-	-gAHPOptimizationUnit.jl : Modèle Julia					//Aucune manipulation requise
+	-gAHPOptimizationUnit.jl : Modèle Julia								//Aucune manipulation requise
 
 Installation Python/Julia :
 	1. Packages Python nécessaires :
