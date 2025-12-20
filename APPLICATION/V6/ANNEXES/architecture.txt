@@ -1,0 +1,84 @@
+application
+|
+|-configurationApp.xlsm	//Application de paramétrage du serveur		
+|			//ATTENTION A CHANGER L'ADRESSE DE L'APPLICATION VBA DANS LE FORMULAIRE "UsfCreationEtape3"
+|
+|run.py	//Lancement du serveur
+|
+|-app	//Dossier contenant l'application
+	|
+	|-__init__.py	//Instance du serveur Flask
+	|
+	|-utils		//Dossier contenant les fonctions outils
+	|	|-main_utils.py
+	|
+	|-optimizationUnit	//Dossier contenant l'interface et le modèle d'optimisation Julia
+	|	|-gAHPInterface.py
+	|	|-gAHPOptimizationUnit.jl
+	|
+	|-templates	//Page HTML pour les décideurs
+	|	|
+	|	|-index.html		//Saisir les préférences
+	|	|-ranking.html		//Redirection automatique après soumission du formulaire
+	|
+	|-static	//Dossier de configuration des IHM
+	|	|
+	|	|-app_config	//Configuration du serveur
+	|	|	|
+	|	|	|-app_config_csv	//Fichier csv de paramétrage du serveur (porte toujours le même nom, une copie est gardée dans le dossier de l'ent)
+	|	|	|	|
+	|	|	|	|-app_config_csv.csv
+	|	|	|
+	|	|	|-app_config_entreprise		//Dossier où déposer les kips (1 dossier par entreprise)
+	|	|		|
+	|	|		|-dossierEnt
+	|	|			|
+	|	|			|-decideur
+	|	|			|	|-decideurA
+	|	|			|		|
+	|	|			|		|-CRITEREA_KPIA		//Chaque dossier contient le nom du critère associé à son kpi (1 png par dossier)
+	|	|			|			|-kpi_A.png	//Chaque PNG doit être préfixé par "kpi_"
+	|	|			|
+	|	|			|-graph		//Dossier contenant le graph des alternatives au format png
+	|	|			|	|-gAHP_config_graph_NOMENTREPRISE_date.png	//Généré via matplotlib
+	|	|			|
+	|	|			|-app_config_csv.csv	//Copie du fichier de configuration
+	|	|
+	|	|-templates_config	//Configuration du html
+	|		|-icon
+	|		|	|-favicon_irit.png	//Icon contenu dans le head des pages html
+	|		|
+	|		|-styles
+	|		|	|-style_general.css
+	|		|	|-style_index.css
+	|		|	|-style_ranking.css
+	|		|
+	|		|-scripts
+	|			|-script_index.js
+	|			|-script_ranking.js
+	|
+	|-output	//Différentes sorties des applications
+		|
+		|-app_output	//Sortie du serveur
+		|	|
+		|	|-dossierEnt
+		|		|
+		|		|-alternative
+		|		| 	|
+		|		|	|-preference_alternative_NOMENTREPRISE_CRITEREA_ALTERNATIVEA_date.csv
+		|		|
+		|		|-critere
+		|		|	|
+		|		|	|-preference_critere_NOMENTREPRISE_DECIDEURA_date.csv
+		|		|
+		|		|-decision_finale
+		|			|
+		|			|-decision_finale_NOMENTREPRISE_date.txt
+		|		
+		|-gAHP_output	//Sortie du script gAHPInterface.py (classement)
+			|
+			|-dossierEnt
+				|
+				|-ranking
+					|-gAHP_output_rankg_global_NOMENTREPRISE_date.csv	//Généré à chaque actualisation
+					|-gAHP_output_rankg_round_NOMENTREPRISE_date.csv	//Classement arrondi à deux décimales

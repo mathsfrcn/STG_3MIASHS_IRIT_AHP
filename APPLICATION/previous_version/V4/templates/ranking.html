@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Collecte des préférences</title>
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='templates_config/icon/favicon_irit.png') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='templates_config/styles/style_general.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='templates_config/styles/style_ranking.css') }}">
+
+        {% if data|length == 0 %}
+            <script>
+                //Recharger la page toutes les 10 secondes si data est vide
+                setTimeout(() => {
+                    window.location.reload();
+                }, 10000);
+            </script>
+        {% endif %}
+    </head>
+
+    <body data-decideur="{{ decideur_name }}">
+        <header>
+            <h1>Classement final | {{ company_name }} - {{ date }}</h1>
+        </header>
+        <main>
+            <section>
+                <fieldset>
+                    <div id="kpi-group-container" class="carousel"></div>
+                </fieldset>
+
+                <fieldset>
+                    <fieldset class="bg-color">
+                        <legend>Classement</legend>
+                            <div>
+                                <p>Voici le classement des alternatives :</p>
+                                {% if data|length == 0 %}
+                                    <div class="warning-message">
+                                        <p>Aucune donnée à afficher - En attente du classement.</p>
+                                    </div>
+                                {% else %}
+                                    <table>
+                                        {% for row in data %}
+                                            <tr>
+                                                {% for cell in row %}
+                                                    <td>
+                                                        {{cell}}
+                                                    </td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                <div id="ranking-graph-container" class="ranking-graph-container"></div>
+                                {% endif %}
+                            </div>
+                    </fieldset>
+
+                    {% if decideur_name == supervisor %}
+                        <fieldset class="bg-color">
+                            <legend>Prise de décision</legend>
+                                <div class="supervisor-decision">
+                                    <form method="post" action="/submit_decision_final">
+                                        <label for="supervisor_decision">Veuillez entrer la décision sélectionnée : *</label>
+                                        <input type="text" id="supervisor_decision" name="supervisor_decision" placeholder="Entrez votre décision ici..." size="40" required>
+                                        <div class="legend">
+                                            <p>Les éléments précédés d'un (*) sont obligatoires.</p>
+                                        </div>
+                                        <div class="submit-button">
+                                            <button type="submit">Soumettre</button>
+                                        </div>
+                                    </form>
+                                </div>
+                        </fieldset>
+                    {% endif %}
+                </fieldset>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 IRIT. Tous droits réservés.</p>
+        </footer>
+
+        <script src="{{ url_for('static', filename='templates_config/scripts/script_ranking.js') }}" ></script>
+    </body>
+</html>

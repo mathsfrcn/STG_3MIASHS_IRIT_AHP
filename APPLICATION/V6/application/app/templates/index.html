@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Collecte des Préférences</title>
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='templates_config/icon/favicon_irit.png') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='templates_config/styles/style_general.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='templates_config/styles/style_index.css') }}">
+    </head>
+    <body>
+        <header>
+            <h1>Renseignement des préférences | {{ company_name }} - {{ date }}</h1>
+                <h2>Résumé :</h2>
+                <table>
+                    <tr>
+                        <th>Décideurs</th>
+                        <th>Critères</th>
+                        <th>Alternatives</th>
+                    </tr>
+                    <tr>
+                        <td>{{ decideur_list|length }}</td>
+                        <td>{{ criteria_list|length }}</td>
+                        <td>{{ alternative_list|length }}</td>
+                    </tr>
+                </table>
+        </header>
+        <main>
+            <section>
+                <h2>Formulaire de collecte des préférences :</h2>
+                <form method="post" action="/submit_decision">
+                    <fieldset class="block-decideur">
+                        <legend>Sélection du décideur :</legend>
+                        <select id="decideur" name="decideur" required>
+                            <option value="" disabled selected>--Sélectionnez un décideur--</option>
+                                {% for decideur in decideur_list %}
+                                    <option value="{{ decideur }}">{{ decideur }}</option>
+                                {% endfor %}
+                        </select>
+                    </fieldset>
+
+                    <fieldset class="block-preference">
+                        <legend>Positionnement</legend>
+                        <p>Veuillez vous positionner sur les différents critères puis indiquer vos préférences concernant les différentes alternatives :</p>
+                        <div id="preference-columns-container" class="carousel"></div>
+                    </fieldset>
+
+                    <div class="submit-button">
+                        <p>Une fois le formulaire rempli, cliquez sur le bouton ci-dessous pour soumettre vos préférences.</p>
+                        <button type="submit">Soumettre</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2025 IRIT. Tous droits réservés.</p>
+        </footer>
+        
+        <script src="{{ url_for('static', filename='templates_config/scripts/script_index.js') }}" ></script>
+    </body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Collecte des Préférences</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header>
+            <h1>Renseignement des préférences | {{ nomEntreprise }}</h1>
+            
+            <h2>Résumé :</h2>
+            <table>
+                <tr>
+                    <th>Décideurs</th>
+                    <th>Critères</th>
+                    <th>Alternatives</th>
+                </tr>
+                <tr>
+                    <td>{{ decideur_list_html|length }}</td>
+                    <td>{{ criteria_list_html|length }}</td>
+                    <td>{{ alternative_list_html|length }}</td>
+                </tr>
+            </table>
+        </header>
+        
+        <main>
+            <h2>Préférences :</h2>
+            <section>
+                <form action="/submit" method="POST">                    
+                    <fieldset>
+                        <legend>Décideurs</legend>
+                        <p>Veuillez sélectionner le décideur :</p>
+                        <select name="decideur" id="decideur" required>
+                            {% for d in decideur_list_html %}
+                                <option value="{{d}}">{{ d }}</option>
+                            {% endfor %}
+                        </select>
+                    </fieldset>
+                    
+                    <fieldset>
+                        <legend>Critères</legend>
+                        <p>Veuillez indiquer vos préférences concernant les différents critères :</p>
+                        {% for c in criteria_list_html %}
+                            <p>Critère {{ c }}</p>
+                            <input 
+                                type="range" 
+                                id="critere_{{ loop.index }}" 
+                                name="preference_critere" 
+                                min="1" 
+                                max="10" 
+                                step="1" 
+                                value="5" 
+                                data-target="valeurCritere_{{ loop.index }}"
+                                required/>
+                            <span id="valeurCritere_{{ loop.index }}">5</span>
+                        {% endfor %}
+                    </fieldset>
+                    
+                    <fieldset>
+                        <legend>KPI</legend>
+                        {% for i in image_list_kpi_html %}
+                            <img src="{{ url_for('static', filename=i) }}" 
+                                alt="{{ i }}"
+                                width="350"/>
+                        {% endfor %}
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Alternatives</legend>
+                        <p>Veuillez indiquer vos préférences concernant les différentes alternatives :</p>
+                        {% for a in alternative_list_html %}
+                            <p>Alternative {{ a }}</p>
+                            <input 
+                                type="range" 
+                                id="alternative_{{ loop.index }}" 
+                                name="preference_alternative" 
+                                min="1" 
+                                max="10" 
+                                step="1" 
+                                value="5"
+                                orient="vertical"
+                                data-target="valeurAlternative_{{ loop.index }}"
+                                required/>
+                            <span id="valeurAlternative_{{ loop.index }}">5</span>
+                        {% endfor %}
+                    </fieldset>
+
+                    <br><br>
+                    <input type="submit" value="Soumettre">
+                    <br><br>
+                </form>
+            </section>
+        </main>
+
+        <script>
+            // Fonction pour afficher la valeur du critère/alternative sélectionne
+            document.addEventListener("DOMContentLoaded", function () {
+                const sliders = document.querySelectorAll("input[type='range'][name='preference_critere'], input[type = 'range'][name = 'preference_alternative']");
+
+                sliders.forEach(slider => {
+                    slider.addEventListener("input", function () {
+                        const targetId = this.getAttribute("data-target");
+                        const targetSpan = document.getElementById(targetId);
+                        if (targetSpan) {
+                        targetSpan.textContent = this.value;
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,73 @@
+/*------------------------FORMULAIRE------------------------*/
+
+/*----------TRAITEMENT DU BLOCK DECIDEUR----------*/
+.block-decideur {
+    width: 35%; /* Réduit la largeur du bloc décideur */
+}
+
+/*----------TRAITEMENT DU GROUPE D'ALTERNATIVES----------*/
+.preference-alternative {
+    margin-bottom: 1rem;
+}
+
+.preference-alternative label {
+    display: block;
+    margin-bottom: 0.2rem;
+}
+
+.preference-alternative input[type="range"] {
+    width: 50%;
+    height: 0.5em;
+    border-radius: 3px;
+}
+
+/*----------TRAITEMENT DES SLIDERS----------*/
+/* Configuration générale */
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 10px;
+    background: #e0e0e0;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 6px;
+}
+
+/* Configuration pour les navigateurs utilisant webkit */
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #999;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Configuration pour le navigateur mozzila */
+input[type=range]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #999;
+    cursor: pointer;
+}
+
+/* Couleur dynamique des ranges */
+input[type=range].red {
+    background: red
+}
+
+input[type=range].orange {
+    background: orange;
+}
+
+input[type=range].green {
+    background: green;
+}

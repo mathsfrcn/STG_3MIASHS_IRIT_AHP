@@ -1,0 +1,43 @@
+Applications :
+	-run.py : instance du serveur local					//Manipulation requise
+	-configurationApp.xlsm : paramétrage du serveur				//Manipulation requise
+	-gAHPInterface.py : Interface pour échanger avec le modèle Julia	//Aucune manipulation requise
+	-gAHPOptimizationUnit.jl : Modèle Julia					//Aucune manipulation requise
+
+Installation Python/Julia :
+	1. Packages Python nécessaires :
+ 		1.1. Flask
+		1.2. numpy
+		1.3. csv
+		1.4. os
+		1.5. datetime
+		1.6. subprocess
+		1.7. pandas
+		1.8. matplotlib
+		1.9. secrets
+		1.10. julia
+		1.11. waitress
+
+	2. Packages Julia nécessaires :
+		2.1. LinearAlgebra
+		2.2. Statistics
+		2.3. CSV
+		2.4. DataFrames
+
+	3. Packages pour lier Python et Julia :
+		3.0.0. https://github.com/JuliaPy/PyCall.jl
+		3.0.1. https://github.com/JuliaPy/pyjulia
+		3.1. PyCall
+		3.2. PyJulia
+
+Mise en place :
+	1. Paramétrage du serveur
+		1.1. Changer l'adresse de l'application dans le code du formulaire "UsfCreationEtape3"
+		1.2. Créer un nouveau fichier de paramétrage
+	2. Lancer une instance du serveur "run.py" => le site devient accessible (l'adresse du site est indiquée dans le terminal python)
+	3. Attendre les réponses
+	4. Une fois toutes les réponses obtenues :
+		4.1. Le fichier csv de classement est généré
+		4.2. Le graphe des alternatives est généré
+	5. Tous les décideurs ont maintenant accès au classement
+	6. Le superviseur peut alors renseigner l'alternative retenue (sortie en fichier txt)
