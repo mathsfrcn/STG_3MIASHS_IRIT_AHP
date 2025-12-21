@@ -51,6 +51,7 @@ Installez les dépendances via pip :
 Dans le terminal Julia, installez les packages nécessaires : Juliausing Pkg
 
 ```Julia
+  import Pkg
   Pkg.add(["LinearAlgebra", "Statistics", "CSV", "DataFrames"])
 ````
 
