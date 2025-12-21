@@ -5,15 +5,15 @@ from utils.main_utils import get_settings
 import csv
 
 def load_settings(base_app_path) :
-    ########################################RECUPERATION_DONNEES_CONFIGURATION########################################
-    #1. Récupération des paramètres de configuration depuis le fonction get_settings contenue dans le fichier app.py
+    ########################################DATA_RECOVERY_CONFIGURATION########################################
+    # === 1. Retrieving configuration settings from the get_settings function contained in the app.py file ===
     settings = get_settings()
 
-    ##Si les données sont conformes, extraction des informations
+    ## If the data is compliant, information extraction
     if settings is None :
         return None
     else :
-        ##Extraction des différentes informations de paramétrage
+        ## Extracting the various configuration details
         company_name = settings["company_name"]
         decideur_list = settings["decideur_list"]
         criteria_list = settings["criteria_list"]
@@ -21,17 +21,17 @@ def load_settings(base_app_path) :
         folder_name = settings["folder_name"]
         folder_date = settings["folder_date"]
 
-        ########################################RECONSTITUTION_NOMS_FICHIERS_A_RECUPERER########################################
+        ########################################RECOVERING_FILE_NAMES_TO_RECOVER########################################
 
-        #2. Récupération des outputs critere&preference des décideurs dans le dossier output de l'entreprise
-        ##Chemins vers les différents csv
+        # === 2. Retrieving outputs based on decision-makers' preferences from the company's output folder ===
+        ## Paths to the different CSV files
         csv_output_path = os.path.join(base_app_path, f"output/app_output/{folder_name}")
         csv_output_criteria_path = os.path.join(csv_output_path, "critere/")
         csv_output_alternative_path = os.path.join(csv_output_path, "alternative/")
 
-        ##Récupère le nom des fichiers dans les dossiers critere&preference
-        ###Permet de vérifier que les fichiers correspondants à l'entrepise sont présents puis de récupérer leur nom
-        ###Tous les fichiers sont préfixés de la même façon, on récupère uniquement ceux dont les paramétres correspo
+        ## Retrieves the file names from the preference criteria folders
+        ### This allows you to check that the files corresponding to the company are present and then retrieve their name.
+        ### All files are prefixed in the same way; we only retrieve those whose parameters match.
         criteria_list_file = []
         for filename in os.listdir(csv_output_criteria_path) :
             for decideur in decideur_list :
@@ -57,14 +57,14 @@ def load_settings(base_app_path) :
                 folder_name,)
 
 def write_ranking(base_app_path, folder_name, final_ranking) :
-    #1. Reconsitution du chemin d'accès au dossier de sortie
+    # === 1. Reconstructing the path to the exit folder ===
     folder_path = os.path.join(base_app_path, f"output/gAHP_output/{folder_name}/ranking/")
     os.makedirs(folder_path, exist_ok = True)
 
-    #2. Création d'un deuxieme classement arrondi à 3 décimales
+    # === 2. Creation of a second ranking rounded to 3 decimal places ===
     final_ranking_round = [(name, round(float(val), 3)) for name, val in final_ranking]
 
-    #3. Ecriture des classements dans deux fichiers CSV
+    # === 3. Writing the rankings to two CSV files ===
     with open(folder_path + f"gAHP_output_rank_global_{folder_name}.csv", mode = "w", newline = "") as file_output :
         writer = csv.writer(file_output)
         
@@ -82,22 +82,21 @@ def write_ranking(base_app_path, folder_name, final_ranking) :
 ########################################PYTHON_TO_JULIA########################################
 
 def get_ranking() :
-    #1. Import des différents parametres
+    # === 1. Importing the various parameters ===
     base_path = os.path.dirname(__file__)
     base_app_path = os.path.abspath(os.path.join(base_path, ".."))
 
-
     julia_programme_path = base_path + "/gAHPOptimizationUnit.jl"
 
-    #Vérification de la présence du modele Julia
+    # Checking for the presence of the Julia model
     if os.path.isfile(julia_programme_path) :
-        #Vérification de la présence du fichier de parametrage
+        # Checking for the presence of the configuration file
         if load_settings(base_app_path) is not None :
-            #2. Récupération des paramètres
+            # === 2. Retrieving settings ===
             decideur_list, criteria_list, alternative_list, criteria_list_file, alternative_list_file, csv_output_criteria_path, csv_output_alternative_path, folder_name = load_settings(base_app_path)
             excepted_count_alternative = len(decideur_list) * len(criteria_list)
 
-            #3. Appel du modèle Julia si tout est ok
+            # === 3. Model Julia will call if everything is OK ===
             if len(criteria_list_file) == len(decideur_list) and len(alternative_list_file) == excepted_count_alternative :
                 from julia import Julia
                 Julia(compiled_modules=False)
@@ -105,10 +104,10 @@ def get_ranking() :
                 from julia import Main
                 Main.include(julia_programme_path)
                     
-                ##Récupération du classement final des alternatives
+                ## Retrieving the final ranking of alternatives
                 final_ranking = Main.ahp_with_multiple_criteria(csv_output_criteria_path, csv_output_alternative_path, decideur_list, criteria_list, alternative_list, criteria_list_file, alternative_list_file)
                 
-                #Ecriture du classement final dans un fichier CSV
+                # Writing the final ranking to a CSV file
                 write_ranking(base_app_path, folder_name, final_ranking)
 
                 return final_ranking

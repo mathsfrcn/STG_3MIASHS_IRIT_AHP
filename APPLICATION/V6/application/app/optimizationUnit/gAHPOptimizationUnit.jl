@@ -42,24 +42,23 @@ function aggregate_matrices_arithmetic(matrices)
     return aggregated_matrix
 end
 
-#Chargement, agrégation et vérification des CSV criteres
+# Loading, aggregating, and verifying CSV criteria
 function load_criteria_matrix(criteria_list_file, csv_output_criteria_path, decideur_list)
-    #1. Vérifier si le bon nombre de fichiers a été trouvé
-    ##Normalement cette condition est toujours valide car la vérification a été effectuée en amont
-
+    # === 1. Check if the correct number of files was found ===
+    ## Normally this condition is always valid because the check was carried out beforehand.
     expected_count = length(decideur_list)
     if length(criteria_list_file) == expected_count
         println("Tous les CSV criteres sont présents.")
         decision_criteria_global = Vector{Matrix{Float64}}()
 
-        #2. Récupération du contenu des fichiers CSV
+        # === 2. Retrieving the contents of CSV files ===
         for filename in criteria_list_file
             file_path = joinpath(csv_output_criteria_path, filename)
             decision_criteria_local = CSV.File(file_path, header = false, types = Float64) |> DataFrame |> Matrix
             push!(decision_criteria_global, decision_criteria_local)
         end
 
-        #3. Si tous les fichiers ont été récupérés, agrégation des matrices
+        # === 3. If all files have been retrieved, aggregate the matrices. ===
         if length(decision_criteria_global) == length(criteria_list_file)
             criteria_matrix = aggregate_matrices_arithmetic(decision_criteria_global)
             return criteria_matrix
@@ -73,16 +72,16 @@ function load_criteria_matrix(criteria_list_file, csv_output_criteria_path, deci
     end
 end
 
-#Chargement et vérification des CSV alternatives par critere
+# Loading and verifying alternative CSVs by criteria
 function load_decision_matrix(csv_path, decideur_list, criteria_list, alternative_list_file)
-    #Dimensions de la matrice
+    # Die dimensions
     nb_decideur = length(decideur_list)
     nb_criteria = length(criteria_list)
 
-    #Nombre de fichiers attendus
+    # Number of files expected
     expected_count = nb_decideur * nb_criteria
 
-    #1. Vérification du nombre de fichiers attendus
+    # === 1. Verification of the expected number of files ===
     if length(alternative_list_file) != expected_count
         println("Erreur : $(length(alternative_list_file)) CSV alternatives par critere trouvés, mais $expected_count attendus.")
         return nothing
@@ -90,37 +89,37 @@ function load_decision_matrix(csv_path, decideur_list, criteria_list, alternativ
         println("Tous les CSV alternatives par critere sont présents.")
     end
     
-    #2. Création de la matrice de décision
+    # === 2. Creation of the decision matrix ===
     decision_matrices = [Vector{Matrix{Float64}}(undef, nb_decideur) for _ in 1:nb_criteria]
 
-    #3. Traitement des fichiers CSV
+    # === 3. CSV file processing ===
     for file in alternative_list_file
         filename = replace(basename(file), ".csv" => "")
-        parts = split(filename, "_")    #Format attendu : preference_alternative_NOMENTREPRISE_NOMDECIDEUR_NOMCRITERE_date.csv
+        parts = split(filename, "_")    # Expected format : preference_alternative_NOMENTREPRISE_NOMDECIDEUR_NOMCRITERE_date.csv
 
-        #3.1. Vérification du format du nom du fichier CSV
+        # === 3.1. Checking the CSV file name format ===
         if length(parts) != 8
             println("Impossible : nom du fichier $filename incorrect.")
             return nothing
         end
 
-        #3.2. Récupération du nom du décideur et du critère
+        # === 3.2. Retrieving the decision-maker's name and criteria ===
         dec = parts[4]
         crit = parts[5]
         
         if dec in decideur_list && crit in criteria_list
-            #3.2.1. Récupération de l'indice du décideur et du critère dans les listes adéquats
+            # === 3.2.1. Retrieving the decision-maker's index and criteria from the appropriate lists ===
             i = findfirst(==(crit), criteria_list)
             j = findfirst(==(dec), decideur_list)
 
-            #3.2.2. Récupération du contenu du fichier CSV
+            # === 3.2.2. Retrieving the contents of the CSV file ===
             csv_matrix = CSV.File(csv_path * file, header = false, types = Float64) |> DataFrame |> Matrix
 
-            #3.2.3. Vérification du format de la matrice
+            # === 3.2.3. Matrix format check ===
             if size(csv_matrix, 1) != size(csv_matrix, 2)
                 @warn "Erreur : la matrice contenue dans le fichier $filename n'est pas au bon format."
                 return nothing
-            #3.2.4. Ajout de la matrice dans la matrice principale
+            # === 3.2.4. Adding the matrix to the main matrix ===
             else
                 decision_matrices[i][j] = csv_matrix
             end
@@ -139,7 +138,7 @@ function ahp_with_multiple_criteria(csv_output_criteria_path, csv_alternative_pa
 
     decision_matrix = load_decision_matrix(csv_alternative_path, decideur_list, criteria_list, alternative_list_file)
     
-    # S'il manque des fichiers, arrêt du programme
+    # If files are missing, the program will stop.
     if decision_matrix === nothing || criteria_matrix === nothing
         return nothing
     end
