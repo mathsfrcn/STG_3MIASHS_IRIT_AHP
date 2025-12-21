@@ -92,7 +92,6 @@ function load_decision_matrix(csv_path, decideur_list, criteria_list, alternativ
     
     #2. Création de la matrice de décision
     decision_matrices = [Vector{Matrix{Float64}}(undef, nb_decideur) for _ in 1:nb_criteria]
-    #d = [Vector{Any}(undef, nb_decideur) for _ in 1:nb_criteria]   #Test
 
     #3. Traitement des fichiers CSV
     for file in alternative_list_file
@@ -124,15 +123,12 @@ function load_decision_matrix(csv_path, decideur_list, criteria_list, alternativ
             #3.2.4. Ajout de la matrice dans la matrice principale
             else
                 decision_matrices[i][j] = csv_matrix
-                d[i][j] = dec*"_"*crit  #Test
             end
         else
             println("Décideur ou critère non reconnu dans le fichier : $filename.")
             return nothing
         end
     end
-
-    #println("matrice alternative nom :", d)    #Test
     return decision_matrices
 end
 

@@ -7,7 +7,7 @@ import datetime
 
 main_blueprint = Blueprint('main', __name__)
 
-#Page d'accueil : index.html
+#Page d'accueil : filling.html
 @main_blueprint.route('/')
 def index() :
     #Récupération des paramètres de configuration
@@ -21,7 +21,7 @@ def index() :
         alternative_list = settings["alternative_list"]
         company_name = settings["company_name"]
 
-        return render_template("index.html", 
+        return render_template("filling.html", 
                             decideur_list = decideur_list, 
                             criteria_list = criteria_list, 
                             alternative_list = alternative_list, 

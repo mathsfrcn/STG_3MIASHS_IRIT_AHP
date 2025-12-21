@@ -1,6 +1,5 @@
 import secrets
 from flask import Flask
-from waitress import serve #serveur sur lequel lancer le site
 from .routes import main_blueprint
 
 def create_app():

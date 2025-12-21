@@ -99,6 +99,9 @@ def get_ranking() :
 
             #3. Appel du modèle Julia si tout est ok
             if len(criteria_list_file) == len(decideur_list) and len(alternative_list_file) == excepted_count_alternative :
+                from julia import Julia
+                Julia(compiled_modules=False)
+                
                 from julia import Main
                 Main.include(julia_programme_path)
                     
