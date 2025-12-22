@@ -22,10 +22,7 @@
                         <fieldset class="config-section">
                             <legend> 0. Nom de l'entreprise</legend>
                             <div class="input-group">
-                                <input type="text" id="company-name" placeholder="Nom de la compagnie">
-                            </div>
-                            <div class="listbox-container">
-                                <ul id="company-name-list" class="custom-listbox"></ul>
+                                <input type="text" id="company-name" name="company_name" placeholder="Nom de la compagnie" required>
                             </div>
                         </fieldset>
 
@@ -44,11 +41,11 @@
                         <fieldset class="config-section">
                             <legend>2. Critères</legend>
                             <div class="input-group">
-                                <input type="text" id="new-critere" placeholder="Nom du critère">
-                                <button type="button" onclick="addItem('critere')">Ajouter</button>
+                                <input type="text" id="new-criteria" placeholder="Nom du critère">
+                                <button type="button" onclick="addItem('criteria')">Ajouter</button>
                             </div>
                             <div class="listbox-container">
-                                <ul id="critere-list" class="custom-listbox"></ul>
+                                <ul id="criteria-list" class="custom-listbox"></ul>
                             </div>
                         </fieldset>
 

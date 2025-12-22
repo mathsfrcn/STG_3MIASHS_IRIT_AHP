@@ -151,3 +151,16 @@ def generate_alternative_graph(final_ranking, config_graph_file, config_graph_fo
     plt.tight_layout()
     plt.savefig(config_graph_file_formated, dpi = 150)
     plt.close(fig)
+
+
+import datetime
+
+def export_config(company_name:str, decideurs_list:list, criteria_list:list, alternatives_list:list, kpis_list:list, assignements:dict):
+    now = datetime.nom()
+    folder_date = now.strftime("%d_%m_%y")
+    folder_name = f"{company_name}_{folder_date}"
+    
+    base_path = os.path.dirname(__file__)
+    config_dir = os.path.join(base_path, "static", "app_config", "app_config_entreprise")
+    
+    pass

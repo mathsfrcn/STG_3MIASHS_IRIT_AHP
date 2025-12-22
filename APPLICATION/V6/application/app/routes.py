@@ -46,16 +46,42 @@ def filling() :
 # Submit decisions
 ########################################################################################################################
 @main_blueprint.route("/submit_configuration", methods=['POST'])
-def submit_configuration() :
+def submit_configuration():
+    # Initialisation
+    data = {}
     
+    if request.is_json:
+        data = request.get_json()
+        
+        # === 1. Lists recovery ===
+        raw_company_name = data.get("company_name", "ENTREPRISE")
+        company_name = "_".join(raw_company_name.split())
+        decideurs_list = data.get("decideurs_list", None)
+        criteria_list = data.get("criteria_list", None)
+        alternatives_list = data.get("alternatives_list", None)
+        kpis_list = data.get("kpis_list", None)
+        
+        # === 2. Supervisor recovery ===
+        supervisor_index = data.get("supervisor_id")
+        supervisor_name = decideurs_list[supervisor_index] if supervisor_index is not None else None
+        
+        # === 3. Matrix recovery ===
+        assignments = data.get("assignments", {})
+        
+        if not company_name :
+            return jsonify({"status": "error", "message": "Le nom de l'entreprise est invalide"}), 400
+        
+        
+        
     
-    
-    
-    
-    
-    
-    
-    return render_template("home.html")
+        
+        
+        
+        
+        
+        return jsonify({"status": "success", "message": "Configuration traitée"}), 200
+
+    return jsonify({"status": "error", "message": "Format JSON attendu"}), 400
 
 ########################################################################################################################
 # Sends decisions

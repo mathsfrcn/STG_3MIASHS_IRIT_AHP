@@ -1,61 +1,79 @@
-// Internal data for configuration
+// Données internes pour la configuration (Vos nouveaux noms de variables)
 let configData = {
-    company_name: [],
-    decideurs: [],
-    criteres: [],
-    alternatives: [],
-    kpis: [],
-    supervisorIndex: null
+    decideurs_list : [],
+    criteria_list : [],
+    alternatives_list : [],
+    kpis_list : [],
+    supervisor_id : null
+};
+
+// Correspondance entre le "type" envoyé par les boutons et vos variables
+const keyMap = {
+    'decideur': 'decideurs_list',
+    'criteria': 'criteria_list',
+    'alternative': 'alternatives_list',
+    'kpi': 'kpis_list'
 };
 
 /**
- * Adds an item to the configuration lists
- * @param {string} type - 'decideur', 'criteria', 'alternative', or 'kpi'
+ * Ajoute un élément aux listes de configuration
+ * @param {string} type - 'decideur', 'critere', 'alternative', ou 'kpi'
  */
 function addItem(type) {
     const input = document.getElementById(`new-${type}`);
+    if (!input) return;
+
     const value = input.value.trim();
+    const listKey = keyMap[type]; // On récupère le nom de la variable (ex: decideurs_list)
 
-    // Validation of limits
-    if (type === 'decideur' && configData.decideurs.length >= 6) return alert("Maximum 6 décideurs.");
-    if (type === 'critere' && configData.criteres.length >= 7) return alert("Maximum 7 critères.");
-    if (type === 'alternative' && configData.alternatives.length >= 20) return alert("Maximum 20 alternatives.");
+    // Validation des limites (Source: Rapport )
+    if (type === 'decideur' && configData.decideurs_list.length >= 6) return alert("Maximum 6 décideurs.");
+    if (type === 'critere' && configData.criteria_list.length >= 7) return alert("Maximum 7 critères.");
+    if (type === 'alternative' && configData.alternatives_list.length >= 20) return alert("Maximum 20 alternatives.");
 
-    if (value && !configData[`${type}s`].includes(value)) {
-        configData[`${type}s`].push(value);
+    // Vérification de doublon et ajout
+    if (value && !configData[listKey].includes(value)) {
+        configData[listKey].push(value);
         input.value = '';
         renderList(type);
-        generateMatrix(); // Assignment matrix update
+        generateMatrix(); 
     }
 }
 
 /**
- * Remove an item from the list
+ * Supprime un élément de la liste
  */
 function removeItem(type, index) {
-    configData[`${type}s`].splice(index, 1);
-    if (type === 'decideur' && configData.supervisorIndex === index) configData.supervisorIndex = null;
+    const listKey = keyMap[type];
+    configData[listKey].splice(index, 1);
+
+    // Si on supprime le superviseur, on réinitialise l'ID 
+    if (type === 'decideur' && configData.supervisor_id === index) {
+        configData.supervisor_id = null;
+    }
+    
     renderList(type);
     generateMatrix();
 }
 
 /**
- * Displays the lists in the interface
+ * Affiche les listes dans l'interface
  */
 function renderList(type) {
     const container = document.getElementById(`${type}-list`);
+    const listKey = keyMap[type];
     container.innerHTML = '';
 
-    configData[`${type}s`].forEach((item, index) => {
+    configData[listKey].forEach((item, index) => {
         const li = document.createElement('li');
         li.className = 'list-item';
         
         let supervisorHtml = '';
         if (type === 'decideur') {
-            // Choice of supervisor
+            // Gestion du rôle de superviseur unique [cite: 214]
             supervisorHtml = `
                 <input type="radio" name="supervisor" id="sup-${index}" 
-                       ${configData.supervisorIndex === index ? 'checked' : ''} 
+                       ${configData.supervisor_id === index ? 'checked' : ''} 
                        onclick="setSupervisor(${index})">
                 <label for="sup-${index}">Sup.</label>
             `;
@@ -73,31 +91,31 @@ function renderList(type) {
 }
 
 function setSupervisor(index) {
-    configData.supervisorIndex = index;
+    configData.supervisor_id = index;
 }
 
 /**
- * Generates the KPI/Decision-maker/Criteria assignment matrix
+ * Génère la matrice d'affectation
  */
 function generateMatrix() {
     const container = document.getElementById('kpi-assignment-matrix');
     
-    if (configData.decideurs.length === 0 || configData.criteres.length === 0) {
-        container.innerHTML = '<p class="empty-msg">Ajoutez des décideurs et des critères pour configurer les KPIs.</p>';
+    if (configData.decideurs_list.length === 0 || configData.criteria_list.length === 0) {
+        container.innerHTML = '<p class="empty-msg">Ajoutez des décideurs et des critères pour configurer les kpis.</p>';
         return;
     }
 
-    let tableHtml = `<table><thead><tr><th>Décideur \ Critère</th>`;
-    configData.criteres.forEach(c => tableHtml += `<th>${c}</th>`);
+    let tableHtml = `<table><thead><tr><th>Décideur \\ Critère</th>`;
+    configData.criteria_list.forEach(c => tableHtml += `<th>${c}</th>`);
     tableHtml += `</tr></thead><tbody>`;
 
-    configData.decideurs.forEach((decideur, dIdx) => {
+    configData.decideurs_list.forEach((decideur, dIdx) => {
         tableHtml += `<tr><td><strong>${decideur}</strong></td>`;
-        configData.criteres.forEach((critere, cIdx) => {
+        configData.criteria_list.forEach((critere, cIdx) => {
             tableHtml += `<td>
                 <select name="kpi_map_${dIdx}_${cIdx}" required>
                     <option value="">--Choisir KPI--</option>
-                    ${configData.kpis.map(k => `<option value="${k}">${k}</option>`).join('')}
+                    ${configData.kpis_list.map(k => `<option value="${k}">${k}</option>`).join('')}
                 </select>
             </td>`;
         });
@@ -109,55 +127,59 @@ function generateMatrix() {
 }
 
 /**
- * Check all business constraints before sending to the server
+ * Validation finale avant envoi
  */
-function validateForm(event) {
-    // 1. Minimum number verification
-    if (configData.decideurs.length < 1) {
-        alert("Il faut au moins un décideur.");
-        event.preventDefault();
+async function validateForm(event) {
+    event.preventDefault(); // Bloque l'envoi classique pour utiliser fetch
+
+    // Validations existantes...
+    if (configData.decideurs_list.length < 1 || configData.criteria_list.length < 2) {
+        alert("Configuration incomplète.");
         return false;
     }
-    if (configData.criteres.length < 2) {
-        alert("La méthode AHP nécessite au moins 2 critères.");
-        event.preventDefault();
-        return false;
-    }
-    if (configData.alternatives.length < 2) {
-        alert("La méthode AHP nécessite au moins 2 alternatives.");
-        event.preventDefault();
+    if (configData.supervisor_id === null) {
+        alert("Désignez un superviseur.");
         return false;
     }
 
-    // 2. Supervisor verification
-    if (configData.supervisorIndex === null) {
-        alert("Vous devez désigner un superviseur parmi les décideurs.");
-        event.preventDefault();
-        return false;
-    }
+    // Récupération du nom de l'entreprise
+    const companyName = document.getElementById('company-name').value;
 
-    // 3. KPI Verification
-    if (configData.kpis.length < configData.criteres.length) {
-        alert(`Il manque des KPIs. Vous avez ${configData.criteres.length} critères, il faut donc au moins autant de KPIs.`);
-        event.preventDefault();
-        return false;
-    }
-
-    // 4. Verification of the assignment matrix
+    // Récupération de la matrice d'affectation (kpi_map_...)
+    const assignments = {};
     const selects = document.querySelectorAll('#kpi-assignment-matrix select');
-    let allAssigned = true;
     selects.forEach(select => {
-        if (select.value === "") allAssigned = false;
+        assignments[select.name] = select.value;
     });
 
-    if (!allAssigned) {
-        alert("Toutes les cases de la matrice d'affectation KPI/Décideur doivent être remplies.");
-        event.preventDefault();
-        return false;
-    }
+    // Construction du pack de données complet [cite: 394, 395, 396]
+    const payload = {
+        company_name: companyName,
+        decideurs_list: configData.decideurs_list,
+        criteria_list: configData.criteria_list,
+        alternatives_list: configData.alternatives_list,
+        kpis_list: configData.kpis_list,
+        supervisor_id: configData.supervisor_id,
+        assignments: assignments
+    };
 
-    return true;
+    // Envoi au serveur Flask [cite: 278, 286]
+    try {
+        const response = await fetch('/submit_configuration', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            alert("Configuration enregistrée avec succès !");
+            window.location.href = "/"; // Redirection vers l'accueil
+        } else {
+            alert("Erreur lors de l'enregistrement.");
+        }
+    } catch (error) {
+        console.error("Erreur:", error);
+    }
 }
 
-// Linking validation to the form
 document.getElementById('config-form').addEventListener('submit', validateForm);
