@@ -19,7 +19,7 @@ Ce projet implémente une application web interactive dédiée à la prise de d�
 ## ✨ Fonctionnalités
 
 ### 1. Configuration Dynamique (Excel/VBA)
-Paramétrage complet du serveur via configurationApp.xlsm sans toucher au code. Définition des décideurs, critères, alternatives et indicateurs de performance (KPI).Génération automatique de l'architecture des dossiers pour chaque entreprise.
+Paramétrage complet du serveur via configurationApp.xlsm sans toucher au code. Définition des décideurs, critères, alternatives et indicateurs de performance (KPI). Génération automatique de l'architecture des dossiers pour chaque entreprise.
 
 ### 2. Collecte des Préférences (IHM 1)
 Interface web permettant à chaque décideur de saisir son niveau d'expertise par critère. Évaluation des alternatives via des curseurs interactifs changeant de couleur selon la valeur. Visualisation des KPIs personnalisés sous forme de graphiques pour éclairer le choix.
@@ -31,7 +31,7 @@ Calcul de la cohérence des données pour assurer la fiabilité des jugements. A
 Affichage du classement final et génération d'un graphique des scores via matplotlib. Interface spécifique pour le Superviseur afin de valider l'alternative retenue. Export de la décision finale au format .txt pour archivage et preuve écrite
 
 ## 🛠️ Modélisation Physique
-L'agrégation des préférences suit la logique hiérarchique de Saaty. Le calcul du vecteur de priorité $w$ est réalisé par le modèle Julia pour résoudre :$$A \cdot w = \lambda_{max} \cdot w$$Où $A$ représente la matrice de comparaison par paires agrégée
+L'agrégation des préférences suit la logique hiérarchique de Saaty. Le calcul du vecteur de priorité $w$ est réalisé par le modèle Julia pour résoudre : $$A \cdot w = \lambda_{max} \cdot w$$Où $A$ représente la matrice de comparaison par paires agrégée
 
 ## 🚀 Installation
 
