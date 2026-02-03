@@ -37,7 +37,7 @@ L'agrégation des préférences suit la logique hiérarchique de Saaty. Le calcu
 
 ### 0. Cloner le dépôt :
 ```Bash
-    git clone [https://github.com/mathsfrcn/IRIT_application_optimisation.git](https://github.com/mathsfrcn/IRIT_application_optimisation.git)
+    git clone [[https://github.com/mathsfrcn/IRIT_these_AHP.git](https://github.com/mathsfrcn/IRIT_these_AHP.git)]
 ```
 
 ### 1. Prérequis Python
